@@ -1,0 +1,8 @@
+- [Paper Reading](/papar%20reading/README.md)
+  - [fr3m](/papar%20reading/fr3m/notebook.md)
+  - LERF
+  - LEGaussians
+  - GraspSplats
+  - ConceptGraphs
+  - GRUtopia
+  - RoboCasa

@@ -1,5 +1,5 @@
 - [Paper Reading](/papar%20reading/README.md)
-  - [fr3m]
+  - [fr3m](/docs/papar%20reading/fr3m/)
     - [Distilled Feature Fields Enable Few-Shot Language-Guided Manipulation](/docs/papar%20reading/fr3m/Distilled%20Feature%20Fields%20Enable%20Few-Shot%20Language-Guided%20Manipulation.md)
   - LERF
   - LEGaussians

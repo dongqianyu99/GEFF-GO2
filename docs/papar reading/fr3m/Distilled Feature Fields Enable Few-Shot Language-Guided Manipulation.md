@@ -1,6 +1,6 @@
 # Distilled Feature Fields Enable Few-Shot Language-Guided Manipulation
 
->*keywords*: **Distilled Feature Fields, Few-Shot, 2D-to-3D, Language-Guided Manipulation**
+>*keywords:* **Distilled Feature Fields, Few-Shot, 2D-to-3D, Language-Guided Manipulation**
 
 ## Abstract
 
@@ -15,4 +15,4 @@
 
 ### workflow
 
-*Step1*: scan by taking a sequence of photos ==> construct a *neural radiance field* (**NeRF**)
+*Step1:* scan by taking a sequence of photos ==> construct a *neural radiance field* **(NeRF)**

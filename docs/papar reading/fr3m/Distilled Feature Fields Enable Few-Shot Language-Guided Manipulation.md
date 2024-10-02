@@ -41,4 +41,6 @@ It organizes data using a *multi-level hash grid* structure, allowing for fast l
 
 ## Problem Formulation
 
->a single rigid-body transformation is parameterized as ${T} \in {SE(3)}$
+>- a single rigid-body transformation is parameterized as ${T} \in {SE(3)}$
+>- parameterize a 6-DOP grasp or place pose as ${T} \equiv {(R, t)}$, ${R}$ is the rotation matrix, ${t}$ is the ranslation vector
+>- given a set of RGB images ${I}$ with corresponding camera poses

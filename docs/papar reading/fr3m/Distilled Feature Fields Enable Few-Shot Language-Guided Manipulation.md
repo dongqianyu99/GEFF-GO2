@@ -12,6 +12,9 @@
 ## Introduction
 
 - given a *few grasping demonstrations or text descriptions* without having previously seen a similar item $\Rightarrow$ pre-trained image embeddings
+- **DINO ViT**, *a self-supervised vision transformers* provides features (out-of-the-box visual descriptors for dense correspondence)
+- **CLIP**, *a vision-language model*, a strong <u>zero-shot</u> learner on various vision and visual question-answering tasks
+- rich visual and language priors within 2D foundation models $\Rightarrow$ *generalize to new categories of objects*
 
 ### workflow
 
@@ -25,9 +28,6 @@
 >pre-trained vision foundation model (neural network) providing *image features*
 >mutiple 2D images $\Rightarrow$ 3D scene  representation called *DFF*
 >DFF embeds knowledge from 2D feature maps into a 3D volume
-
-- **DINO ViT**, *a self-supervised vision transformers* provides features (out-of-the-box visual descriptors for dense correspondence)
-- **CLIP**, *a vision-language model*, a strong <u>zero-shot</u> learner on various vision and visual question-answering tasks
 
 ### challenge
 

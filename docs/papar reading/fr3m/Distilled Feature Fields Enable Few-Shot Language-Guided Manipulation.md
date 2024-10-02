@@ -25,16 +25,20 @@
 ![alt text](image.png)
 
 ?>**NeRF**
->pre-trained vision foundation model (neural network) providing *image features*
->mutiple 2D images $\Rightarrow$ 3D scene  representation called *DFF*
->DFF embeds knowledge from 2D feature maps into a 3D volume
+pre-trained vision foundation model (neural network) providing *image features*
+mutiple 2D images $\Rightarrow$ 3D scene  representation called *DFF*
+DFF embeds knowledge from 2D feature maps into a 3D volume
 
 ### challenge
 
 - *modeling time* $\Rightarrow$ *hierarchical hashgrids*
 
 ?>**Hierarchical Hashgrids**
->Hierarchical hashgrids is a technique used to accelerate data querying and storage in 3D space. 
->It organizes data using a *multi-level hash grid* structure, allowing for fast lookup and insertion operations.
+Hierarchical hashgrids is a technique used to accelerate data querying and storage in 3D space. 
+It organizes data using a *multi-level hash grid* structure, allowing for fast lookup and insertion operations.
 
 - *vision-language features:* *CLIP* produce image-level features, 3D feature distillation requires dense 2D descriptors $\Rightarrow$ *MaskCLIP* reparameterization trick, extracting dense patch-level features from CLIP 
+
+## Problem Formulation
+
+>a single rigid-body transformation is parameterized as ${T} \in {SE(3)}$

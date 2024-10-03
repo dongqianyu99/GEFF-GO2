@@ -9,7 +9,7 @@
 - achieve in-the-wild generalization to unseen objects
 - *features distilled fields* $\Rightarrow$ vision-language model, *CLIP*
 
-## Introduction
+## 1. Introduction
 
 - given a *few grasping demonstrations or text descriptions* without having previously seen a similar item $\Rightarrow$ pre-trained image embeddings
 - **DINO ViT**, *a self-supervised vision transformers* provides features (out-of-the-box visual descriptors for dense correspondence)
@@ -39,8 +39,24 @@ It organizes data using a *multi-level hash grid* structure, allowing for fast l
 
 - *vision-language features:* *CLIP* produce image-level features, 3D feature distillation requires dense 2D descriptors $\Rightarrow$ *MaskCLIP* reparameterization trick, extracting dense patch-level features from CLIP 
 
-## Problem Formulation
+## 2. Problem Formulation
 
 >- a single rigid-body transformation is parameterized as ${T} \in {SE(3)}$
->- parameterize a 6-DOP grasp or place pose as ${T} \equiv {(R, t)}$, ${R}$ is the rotation matrix, ${t}$ is the ranslation vector
->- given a set of RGB images ${I}$ with corresponding camera poses
+>- parameterize a 6-DOP grasp or place pose as ${T} = {(R, t)}$, ${R}$ is the rotation matrix, ${t}$ is the ranslation vector
+>- given a set of RGB images $\{ {I} \}$ with corresponding camera poses
+
+### Few-Shot Manipulation
+
+*learning:* each demonstration ${D}$ consists of the tuple $\langle \{ {I} \} , {T}^*\rangle$, ${T}^*$ is a pose that accomplishes the desired task
+
+*testing:* given multiple images $\{ {I}^\prime \}$ of a new scene which may contain distractor objects and clutter $\Rightarrow$ predict a pose ${T}$ that achieves the task
+
+>want to test for *open-ended generalization*: the new scene contains related but previously unseen objects that differ from the demo objects
+
+### Open-Text Language-Guided Manipulation
+
+*testing:* provides the robot with a text query ${L}^+$ to specify which object to manipulate and negative texts ${L}^-$ to reject distractors
+
+>${L}^-$ can be sampled automatically (?)
+
+## 3. Feature Fields for Robotic Manipulation (F3RM)

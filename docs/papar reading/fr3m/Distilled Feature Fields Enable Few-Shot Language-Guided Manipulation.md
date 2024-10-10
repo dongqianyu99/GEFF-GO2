@@ -59,4 +59,71 @@ It organizes data using a *multi-level hash grid* structure, allowing for fast l
 
 >${L}^-$ can be sampled automatically (?)  
 
-## 3. Feature Fields for Robotic Manipulation (F3RM)
+## 3. Feature Fields for Robotic Manipulation (F3RM)  
+
+>Three Separate Problem  
+- produce the feature field of a scene automatically at a reasonable speed  
+- represent and infer 6-DOF grasping and placing poses  
+- incorporate language guidance to enable open-text commands  
+ 
+### 3.1 Feature Field Distillation  
+
+**Distilled Feature Fields (DFFs)** are an extension of NeRF that aim to generate richer 3D representations by incorporating features from a vision model. 
+including an additional output to reconstruct *dense 2D features* from a vision model $f_{vis}$
+
+$f: 3D {\space} position {\space} x {\space}\mapsto {\space} a {\space} feature {\space} vector {\space} f(X)$  
+
+each feature vector is given by the feature rendering integral between the near and far plane (tn and tf ):  
+
+![alt text](image-1.png)  
+
+#### Feature Distillation  
+$N$ 2D feature maps $\{I^f_i\}^N_{i=1}$, $I^f=f_{vis}(I)$  
+optimize $f$ by minimizing the quadratic loss $L_{feat}=\sum_{r\in{R}}||\hat{F}(r)-I^f(r)||_2^2$  
+
+#### Extracting Dense Visual Features from CLIP  
+**CLIP Modification**
+- extract dense features from CLIP using the *MaskCLIP* reparameterization trick  
+These features retain a *sufficient alignment* with the language embedding to support zero-shot language guidance   
+- interpolate the *position encoding* to accommodate larger images  
+
+*target:* *dense, high-resolution patch-level* 2D features from RGB images at about 25 frames per second and does not require fine-tuning CLIP  
+
+### 3.2 Represnting 6-DOF Pose with Feature Fields  
+
+*target:* represent *the pose of the gripper* in a demonstration by the local 3D feature field in the
+gripper's coordinate frame  
+
+Can't really understand.  
+>"For a 6-DOF gripper pose T, we sample the feature field f at each point in the query point cloud, transformed by T"  
+
+![alt text](image-3.png)
+
+![alt text](image-2.png)  
+
+#### Inferring 6-DOF Pose  
+
+*Step1:* coarse pre-filtering step  
+*Step2:* optimization-based fine-tuning step  
+
+- sample a dense voxel grid over the workspace $\Leftarrow$ voxel $v$ has a grid-size $\delta$  
+- remove free space $\Leftarrow$ rejecting $\alpha(v)<\epsilon_{free}$  
+- remove voxels that are irrelevant to the task $\Leftarrow$ cosine similarity  
+- to get the complete 6-DOF poses $\mathcal{T}=\{T\}$ $\Leftarrow$ sample $N_r$ rotations for each remaining voxel $v$  
+
+#### Pose Optimization  
+
+initial poses optimization:  
+$\mathcal{J}_{pose}(T)=-cos(z_T, Z_M)$  
+
+- optimize the initial poses using the *Adam* optimizer to search for poses that have the highest similarity to the task embedding $Z_M$  
+- prune pose that have the highest costs  
+- reject poses that are in collision  
+
+$\Rightarrow$ a ranked list of poses that we feed into a motion planner in PyBullet  
+
+
+
+
+
+

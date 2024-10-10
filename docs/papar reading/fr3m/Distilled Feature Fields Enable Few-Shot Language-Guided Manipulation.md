@@ -73,9 +73,9 @@ including an additional output to reconstruct *dense 2D features* from a vision 
 
 $f: 3D {\space} position {\space} x {\space}\mapsto {\space} a {\space} feature {\space} vector {\space} f(X)$  
 
-each feature vector is given by the feature rendering integral between the near and far plane (tn and tf ):  
+each feature vector is given by the feature rendering integral between the near and far plane ($t_n$ and $t_f$):  
 
-![alt text](image-1.png)  
+$F(r)=\int_{t_n}^{t_f}T(t)\sigma(r_t)f(r_t)dt$ with $T(t)=exp(-\int_{t_n}^{t}\sigma(r_s)ds)$  
 
 #### Feature Distillation  
 $N$ 2D feature maps $\{I^f_i\}^N_{i=1}$, $I^f=f_{vis}(I)$  
@@ -121,6 +121,15 @@ $\mathcal{J}_{pose}(T)=-cos(z_T, Z_M)$
 - reject poses that are in collision  
 
 $\Rightarrow$ a ranked list of poses that we feed into a motion planner in PyBullet  
+
+### 3.3 Open-Text Language-Guided Manipulation  
+
+**Language-guided Pose Inference Procedure**  
+*Step1:* retrieving relevant demonstrations  
+*Step2:* initailizing coarse grasps  
+*Step3:* language-guided grasp pose optimization  
+
+#### Retrieving Relevant Demonstrations  
 
 
 

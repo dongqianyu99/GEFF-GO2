@@ -98,8 +98,7 @@ approximate this local context via *a discrete set of query points* and *the fea
 - sample a fixed set of $N_q$ query points $\mathcal{X} = \{x\in \mathbb{R}^3 \}_{N_q}$ in the canonical gripper frame for each task $M$ from a 3D Gaussian  
 - adjust its mean and variance manually to cover parts of the objects we intend to targets, as well as important context cues  
 -  For a 6-DOF gripper pose $T$, we sample the feature field $f$ at each point in the query point cloud, transformed by $T$  
-
-the occupancy given by the local geometry $\Rightarrow$ *$\alpha$-$weighted\space features$*  
+- the occupancy given by the local geometry $\Rightarrow$ *$\alpha$-$weighted\space features$*  
 $f_{\alpha}=\alpha(x)\cdot f(x)$, where $\alpha (x)=1-exp(-\sigma(x) \cdot \delta)\in (0, 1)$  
 
 ?>
@@ -107,7 +106,23 @@ $f_{\alpha}=\alpha(x)\cdot f(x)$, where $\alpha (x)=1-exp(-\sigma(x) \cdot \delt
 **$\alpha$ value (transparency):** Alpha values are computed by integrating the density field over a voxel, reflecting *the transparency or opacity of the region*. High alpha values suggest that the voxel is occupied by an object, while low values indicate that the voxel is mostly empty or free space.  
 **Feature weighting:** At each point $x$ in the scene, the features extracted from that region are weighted by the corresponding alpha value. This means that *regions with high transparency (i.e., dense objects) will have more influence in the feature representation*, while regions with low transparency (mostly empty space) will have less influence.  
 
+sample a set of feature:  
+$\{f_{\alpha}(x)|x\in T\mathcal{X}\}$  
+and concatenate along the feature-dimension into a vector, $z_T\in \mathbb{R}^{N_q\cdot|f|}$  
+$\Rightarrow$ query points $\mathcal{X}$ and demo embedding $z_T$ jointly encode the demo pose $T$  
+
+each manipulation task $M$ specified by a set demonstrations $\{D\}$:  
+average $z_T$ over the demos for the same task $\Rightarrow$ *task embedding* $Z_M\in \mathbb{R}^{{N_q}\cdot|f|}$  
+
+?>**To Sum Up**  
+*Step1-Sample Query Points:* for each task $M$, sample $N_q$ query points $\mathcal{X}=\{x\in \mathbb{R}^3 \}_{N_q}$ $\Leftarrow$ 3D Gaussian  
+*Step2-Sample Feature Field:* for each 6-DOF gripper pose $T$, $\mathcal{X} \Rightarrow T\mathcal{X}$; calculate $\alpha$-$weighted\space features$ using the NeRF density field $\sigma$, $f \Rightarrow f_{\alpha}$  
+*Step3-Feature Concatenation:* at each point, do $\{f_{\alpha}(x)|x\in T\mathcal{X}\}$, concatenate the weight features $f_{\alpha}(x)$ along the feature dimension into a vector $z_T$, representing the current pose $T$  
+*Step4-Task Embedding Generation:* for multiple demonstrations $\{D\}$ for each task, average $z_T \Rightarrow Z_M$  
+
 ![alt text](image-2.png)  
+
+
 
 #### Inferring 6-DOF Pose  
 

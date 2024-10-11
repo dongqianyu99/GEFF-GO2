@@ -94,10 +94,18 @@ These features retain a *sufficient alignment* with the language embedding to su
 *target:* represent *the pose of the gripper* in a demonstration by the local 3D feature field in the
 gripper's coordinate frame  
 
-Can't really understand.  
->"For a 6-DOF gripper pose T, we sample the feature field f at each point in the query point cloud, transformed by T"  
+approximate this local context via *a discrete set of query points* and *the feature vectors measured at each point*  
+- sample a fixed set of $N_q$ query points $\mathcal{X} = \{x\in \mathbb{R}^3 \}_{N_q}$ in the canonical gripper frame for each task $M$ from a 3D Gaussian  
+- adjust its mean and variance manually to cover parts of the objects we intend to targets, as well as important context cues  
+-  For a 6-DOF gripper pose $T$, we sample the feature field $f$ at each point in the query point cloud, transformed by $T$  
 
-![alt text](image-3.png)
+the occupancy given by the local geometry $\Rightarrow$ *$\alpha$-$weighted\space features$*  
+$f_{\alpha}=\alpha(x)\cdot f(x)$, where $\alpha (x)=1-exp(-\sigma(x) \cdot \delta)\in (0, 1)$  
+
+?>
+**Density Field $\sigma$:** In a NeRF model, the density field represents *the distribution of objects in space*. A higher density value means the object is more opaque or solid at that point, indicating the object’s occupancy in the voxel.  
+**$\alpha$ value (transparency):** Alpha values are computed by integrating the density field over a voxel, reflecting *the transparency or opacity of the region*. High alpha values suggest that the voxel is occupied by an object, while low values indicate that the voxel is mostly empty or free space.  
+**Feature weighting:** At each point $x$ in the scene, the features extracted from that region are weighted by the corresponding alpha value. This means that *regions with high transparency (i.e., dense objects) will have more influence in the feature representation*, while regions with low transparency (mostly empty space) will have less influence.  
 
 ![alt text](image-2.png)  
 

@@ -18,9 +18,9 @@
 
 ### workflow
 
-*Step1:* scan scene by taking a sequence of photos  
-*Step2:* construct a *neural radiance field* **(NeRF)**, produce *Distilled Feature Field* **(DFF)**  
-*Step3:* reference demonstrations and language instructions to grasp objects  
+***Step1:*** scan scene by taking a sequence of photos  
+***Step2:*** construct a *neural radiance field* **(NeRF)**, produce *Distilled Feature Field* **(DFF)**  
+***Step3:*** reference demonstrations and language instructions to grasp objects  
 
 ![alt text](image.png)
 
@@ -47,21 +47,21 @@ It organizes data using a *multi-level hash grid* structure, allowing for fast l
 
 ### Few-Shot Manipulation
 
-*learning:* each demonstration ${D}$ consists of the tuple $\langle \{ {I} \} , {T}^*\rangle$, ${T}^*$ is a pose that accomplishes the desired task  
+***learning:*** each demonstration ${D}$ consists of the tuple $\langle \{ {I} \} , {T}^*\rangle$, ${T}^*$ is a pose that accomplishes the desired task  
 
-*testing:* given multiple images $\{ {I}^\prime \}$ of a new scene which may contain distractor objects and clutter $\Rightarrow$ predict a pose ${T}$ that achieves the task  
+***testing:*** given multiple images $\{ {I}^\prime \}$ of a new scene which may contain distractor objects and clutter $\Rightarrow$ predict a pose ${T}$ that achieves the task  
 
 >want to test for *open-ended generalization*: the new scene contains related but previously unseen objects that differ from the demo objects  
 
 ### Open-Text Language-Guided Manipulation
 
-*testing:* provides the robot with a text query ${L}^+$ to specify which object to manipulate and negative texts ${L}^-$ to reject distractors  
+***testing:*** provides the robot with a text query ${L}^+$ to specify which object to manipulate and negative texts ${L}^-$ to reject distractors  
 
 >${L}^-$ can be sampled automatically (?)  
 
 ## 3. Feature Fields for Robotic Manipulation (F3RM)  
 
->Three Separate Problem  
+**Three Separate Problem:**  
 - produce the feature field of a scene automatically at a reasonable speed  
 - represent and infer 6-DOF grasping and placing poses  
 - incorporate language guidance to enable open-text commands  
@@ -71,11 +71,11 @@ It organizes data using a *multi-level hash grid* structure, allowing for fast l
 **Distilled Feature Fields (DFFs)** are an extension of NeRF that aim to generate richer 3D representations by incorporating features from a vision model. 
 including an additional output to reconstruct *dense 2D features* from a vision model $f_{vis}$
 
-$f: 3D {\space} position {\space} x {\space}\mapsto {\space} a {\space} feature {\space} vector {\space} f(X)$  
+$f: 3D {\space} position {\space} x {\space}\mapsto {\space} a {\space} feature {\space} vector {\space} f(x)$  
 
 each feature vector is given by the feature rendering integral between the near and far plane ($t_n$ and $t_f$):  
 
-$F(r)=\int_{t_n}^{t_f}T(t)\sigma(r_t)f(r_t)dt$ with $T(t)=exp(-\int_{t_n}^{t}\sigma(r_s)ds)$  
+$F(r)=\int_{t_n}^{t_f}T(t)\sigma(r_t)f(r_t)dt$ ,with $T(t)=exp(-\int_{t_n}^{t}\sigma(r_s)ds)$  
 
 #### Feature Distillation  
 $N$ 2D feature maps $\{I^f_i\}^N_{i=1}$, $I^f=f_{vis}(I)$  
@@ -87,23 +87,25 @@ optimize $f$ by minimizing the quadratic loss $L_{feat}=\sum_{r\in{R}}||\hat{F}(
 These features retain a *sufficient alignment* with the language embedding to support zero-shot language guidance   
 - interpolate the *position encoding* to accommodate larger images  
 
-*target:* *dense, high-resolution patch-level* 2D features from RGB images at about 25 frames per second and does not require fine-tuning CLIP  
+***target:*** *dense, high-resolution patch-level* 2D features from RGB images at about 25 frames per second and does not require fine-tuning CLIP  
 
 ### 3.2 Represnting 6-DOF Pose with Feature Fields  
 
-*target:* represent *the pose of the gripper* in a demonstration by the local 3D feature field in the
+***target:*** represent *the pose of the gripper* in a demonstration by the local 3D feature field in the
 gripper's coordinate frame  
 
 approximate this local context via *a discrete set of query points* and *the feature vectors measured at each point*  
 - sample a fixed set of $N_q$ query points $\mathcal{X} = \{x\in \mathbb{R}^3 \}_{N_q}$ in the canonical gripper frame for each task $M$ from a 3D Gaussian  
 - adjust its mean and variance manually to cover parts of the objects we intend to targets, as well as important context cues  
 -  For a 6-DOF gripper pose $T$, we sample the feature field $f$ at each point in the query point cloud, transformed by $T$  
-- the occupancy given by the local geometry $\Rightarrow$ *$\alpha$-$weighted\space features$*  
-$f_{\alpha}=\alpha(x)\cdot f(x)$, where $\alpha (x)=1-exp(-\sigma(x) \cdot \delta)\in (0, 1)$  
+- the occupancy given by the local geometry $\Rightarrow$ *$\alpha$-weighted features*  
+ $f_{\alpha}=\alpha(x)\cdot f(x)$, where $\alpha (x)=1-exp(-\sigma(x) \cdot \delta)\in (0, 1)$  
 
 ?>
 **Density Field $\sigma$:** In a NeRF model, the density field represents *the distribution of objects in space*. A higher density value means the object is more opaque or solid at that point, indicating the object’s occupancy in the voxel.  
+<br/> 
 **$\alpha$ value (transparency):** Alpha values are computed by integrating the density field over a voxel, reflecting *the transparency or opacity of the region*. High alpha values suggest that the voxel is occupied by an object, while low values indicate that the voxel is mostly empty or free space.  
+<br/>
 **Feature weighting:** At each point $x$ in the scene, the features extracted from that region are weighted by the corresponding alpha value. This means that *regions with high transparency (i.e., dense objects) will have more influence in the feature representation*, while regions with low transparency (mostly empty space) will have less influence.  
 
 sample a set of feature:  
@@ -115,10 +117,13 @@ each manipulation task $M$ specified by a set demonstrations $\{D\}$:
 average $z_T$ over the demos for the same task $\Rightarrow$ *task embedding* $Z_M\in \mathbb{R}^{{N_q}\cdot|f|}$  
 
 ?>**To Sum Up**  
-*Step1-Sample Query Points:* for each task $M$, sample $N_q$ query points $\mathcal{X}=\{x\in \mathbb{R}^3 \}_{N_q}$ $\Leftarrow$ 3D Gaussian  
-*Step2-Sample Feature Field:* for each 6-DOF gripper pose $T$, $\mathcal{X} \Rightarrow T\mathcal{X}$; calculate $\alpha$-$weighted\space features$ using the NeRF density field $\sigma$, $f \Rightarrow f_{\alpha}$  
-*Step3-Feature Concatenation:* at each point, do $\{f_{\alpha}(x)|x\in T\mathcal{X}\}$, concatenate the weight features $f_{\alpha}(x)$ along the feature dimension into a vector $z_T$, representing the current pose $T$  
-*Step4-Task Embedding Generation:* for multiple demonstrations $\{D\}$ for each task, average $z_T \Rightarrow Z_M$  
+***Step1-Sample Query Points:*** for each task $M$, sample $N_q$ query points $\mathcal{X}=\{x\in \mathbb{R}^3 \}_{N_q}$ $\Leftarrow$ 3D Gaussian  
+<br/>
+***Step2-Sample Feature Field:*** for each 6-DOF gripper pose $T$, $\mathcal{X} \Rightarrow T\mathcal{X}$; calculate $\alpha$-weighted features using the NeRF density field $\sigma$, $f \Rightarrow f_{\alpha}$  
+<br/>
+***Step3-Feature Concatenation:*** at each point, do $\{f_{\alpha}(x)|x\in T\mathcal{X}\}$, concatenate the weight features $f_{\alpha}(x)$ along the feature dimension into a vector $z_T$, representing the current pose $T$  
+<br/>
+***Step4-Task Embedding Generation:*** for multiple demonstrations $\{D\}$ for each task, average $z_T \Rightarrow Z_M$  
 
 ![alt text](image-2.png)  
 
@@ -126,12 +131,12 @@ average $z_T$ over the demos for the same task $\Rightarrow$ *task embedding* $Z
 
 #### Inferring 6-DOF Pose  
 
-*Step1:* coarse pre-filtering step  
-*Step2:* optimization-based fine-tuning step  
+***Step1:*** coarse pre-filtering step  
+***Step2:*** optimization-based fine-tuning step  
 
 - sample a dense voxel grid over the workspace $\Leftarrow$ voxel $v$ has a grid-size $\delta$  
 - remove free space $\Leftarrow$ rejecting $\alpha(v)<\epsilon_{free}$  
-- remove voxels that are irrelevant to the task $\Leftarrow$ cosine similarity  
+- remove voxels that are irrelevant to the task $\Leftarrow$ cosine similarity between the voxel feature $f_{\alpha}(v)$ and the task embedding $Z_M$  
 - to get the complete 6-DOF poses $\mathcal{T}=\{T\}$ $\Leftarrow$ sample $N_r$ rotations for each remaining voxel $v$  
 
 #### Pose Optimization  
@@ -140,6 +145,10 @@ initial poses optimization:
 $\mathcal{J}_{pose}(T)=-cos(z_T, Z_M)$  
 
 - optimize the initial poses using the *Adam* optimizer to search for poses that have the highest similarity to the task embedding $Z_M$  
+
+?>**Adam Optimizer**  
+The Adam optimizer is a **gradient-based** optimization algorithm commonly used for training deep learning models. It combines the advantages of *Momentum* and *RMSProp*, applying an adaptive learning rate for each parameter and introducing momentum to speed up convergence and improve stability.  
+
 - prune pose that have the highest costs  
 - reject poses that are in collision  
 
@@ -148,9 +157,9 @@ $\Rightarrow$ a ranked list of poses that we feed into a motion planner in PyBul
 ### 3.3 Open-Text Language-Guided Manipulation  
 
 **Language-guided Pose Inference Procedure**  
-*Step1:* retrieving relevant demonstrations  
-*Step2:* initailizing coarse grasps  
-*Step3:* language-guided grasp pose optimization  
+***Step1:*** retrieving relevant demonstrations  
+***Step2:*** initailizing coarse grasps  
+***Step3:*** language-guided grasp pose optimization  
 
 #### Retrieving Relevant Demonstrations  
 

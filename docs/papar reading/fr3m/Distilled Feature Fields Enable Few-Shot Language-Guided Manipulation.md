@@ -87,6 +87,9 @@ optimize $f$ by minimizing the quadratic loss $L_{feat}=\sum_{r\in{R}}||\hat{F}(
 These features retain a *sufficient alignment* with the language embedding to support zero-shot language guidance   
 - interpolate the *position encoding* to accommodate larger images  
 
+>?**CLIP**  
+**CLIP (Contrastive Language–Image Pretraining)** is a model proposed by OpenAI designed to jointly train image and text through a contrastive learning approach to achieve multimodal understanding. CLIP *embeds images and text into the same feature space*, enabling it to understand and generate descriptions of images or generate corresponding images from text.  
+
 ***target:*** *dense, high-resolution patch-level* 2D features from RGB images at about 25 frames per second and does not require fine-tuning CLIP  
 
 ### 3.2 Represnting 6-DOF Pose with Feature Fields  
@@ -163,8 +166,17 @@ $\Rightarrow$ a ranked list of poses that we feed into a motion planner in PyBul
 
 #### Retrieving Relevant Demonstrations  
 
+finding the demonstrations that maximizes the cosine similarity $cos(q, F_d)$  
+>$F_d$: averaged among the query points of each demo pose $T^*$  
+>$q$: text embedding $q=emb_{CLIP}(L^+)$ $\Rightarrow$ using the positive query text $(L^+) alone is sufficient$   
 
+#### Initializing Grasp Proposals  
 
-
-
+- first running a coarse proposal  
+- sampling a dense voxel grid among the occupied regions by *masking out free space*  
+- prune down the number of voxels $\Leftarrow$ keeping those *more similar to the positive query $L^+$* than any one of the negative queries $L^-$  
+  - compute the **softmax** over the pair-wise cosine similarity between the voxel's feature $f_{\alpha}(v)$ and the ensemble $[q, q_1^-, q_2^-, ... , q_n^-]$  
+  - identify the closest $q^-$  
+  - remove voxels that are closer to $q^-$ than positive query $q$ $\Leftarrow$ binomial distribution    
+- to get the set of initial poses $\mathcal{T}=\{T\}$, sample $N_r$ rotations for each remaining voxel
 

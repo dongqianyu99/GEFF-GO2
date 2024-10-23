@@ -87,12 +87,12 @@ optimize $f$ by minimizing the quadratic loss $L_{feat}=\sum_{r\in{R}}||\hat{F}(
 These features retain a *sufficient alignment* with the language embedding to support zero-shot language guidance   
 - interpolate the *position encoding* to accommodate larger images  
 
->?**CLIP**  
-**CLIP (Contrastive Language–Image Pretraining)** is a model proposed by OpenAI designed to jointly train image and text through a contrastive learning approach to achieve multimodal understanding. CLIP *embeds images and text into the same feature space*, enabling it to understand and generate descriptions of images or generate corresponding images from text.  
+?>**CLIP**  
+**CLIP (Contrastive Language-Image Pretraining)** is a model proposed by OpenAI designed to jointly train image and text through a contrastive learning approach to achieve multimodal understanding. CLIP *embeds images and text into the same feature space*, enabling it to understand and generate descriptions of images or generate corresponding images from text.  
 
 ***target:*** *dense, high-resolution patch-level* 2D features from RGB images at about 25 frames per second and does not require fine-tuning CLIP  
 
-### 3.2 Represnting 6-DOF Pose with Feature Fields  
+### 3.2 Representing 6-DOF Pose with Feature Fields  
 
 ***target:*** represent *the pose of the gripper* in a demonstration by the local 3D feature field in the
 gripper's coordinate frame  
@@ -180,3 +180,26 @@ finding the demonstrations that maximizes the cosine similarity $cos(q, F_d)$
   - remove voxels that are closer to $q^-$ than positive query $q$ $\Leftarrow$ binomial distribution    
 - to get the set of initial poses $\mathcal{T}=\{T\}$, sample $N_r$ rotations for each remaining voxel
 
+#### Language-Guided Grasp Pose Optimization  
+
+$\mathcal{J}_{lang}(T)=\mathop{mean}\limits_{x\in T\mathcal{X}}[q \otimes f_{\alpha}(x)]\cdot\mathcal{J}_{pose}(T)$  
+- language-guidance weight $C_q=\mathop{mean}\limits_{x\in T\mathcal{X}}[q \otimes f_{\alpha}(x)]$ is the normalized cosine similarity between the text embedding $q$ and the average $\alpha$-weighted query feature for a pose $T$  
+- interatively update the pose $T$ via *gradient descent* while pruning  
+
+![alt text](image-1.png)  
+
+!>Summary for F3RM  
+- *Feature Field Distillation*  
+  - Feature Distillation $\Leftarrow$ **NeRF**  
+  - Extracting Dense Visual features $\Leftarrow$ **CLIP**  
+- *Representing 6-DOF Pose with Feature Fields*  
+  - Sample Query Points $\mathcal{X}$ $\Leftarrow$ **3D Gaussian**  
+  - Sample Feature Field: $\mathcal{X} \Rightarrow T\mathcal{X}$; $f \Rightarrow f_{\alpha}$  
+  - Feature Concatenation: concatenate $f_{\alpha}(x)$ into $z_T$ represent pose $T$
+  - Task Embedding Generation: $z_T \Rightarrow Z_M$  
+- *Inferring 6-DOF Pose*  
+- *Pose Optimization*  
+- *Open-Text Language-Guided Manipulation*  
+  - Retrieving Relevant Demonstrations $\Leftarrow$ maximizes $cos(q, F_d)$  
+  - Initializing Grasp Proposals   
+  - Language-Guided Grasp Pose Optimization $\Leftarrow$ $\mathcal{J}_{lang}(T)=\mathop{mean}\limits_{x\in T\mathcal{X}}[q \otimes f_{\alpha}(x)]\cdot\mathcal{J}_{pose}(T)$  

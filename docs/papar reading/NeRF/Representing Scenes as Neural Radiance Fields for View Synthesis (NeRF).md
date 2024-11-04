@@ -39,3 +39,21 @@ $\mathcal{c}$ as a function of both $\mathcal{x}$ and $\mathcal{d}$ $\Rightarrow
 
 - $T(t)$: the light transmittance from $t_n$ to $t$ $\Rightarrow$ $T(t) = exp(-\int_{t_n}^t \sigma(\mathcal{r}(s))ds)$  
 
+estimate using **Deterministic quadrature**  
+using a stratified sampling approach $\Rightarrow$ partition $[t_n, t_f]$ into $N$ evenly-spaced bins:  
+$t_i \sim \mathcal{U}[t_n + \frac{i-1}{N}(t_f - t_n), t_n + \frac{i}{N}(t_f - t_n)]$  
+
+$\Rightarrow$ $\hat{C}(r) = \sum_{i = 1}^N T_i(1 - exp(-\sigma_i\delta_i))c_i$, where $T_i = exp(-\sum_{j = 1}^{i - 1}\sigma_j\delta_j)$  
+- $\delta_i = t_{i+1} - t_i$ is the distance between adjacent samples  
+
+?>**Deterministic quadrature**  
+*Deterministic quadrature* is a numerical integration method used to approximate the integral of a continuous function by using a set of fixed sampling points. In this method, the integration interval is divided into several sub-intervals, and a specific sampling point is selected within each sub-interval. The function values at these points are then weighted and summed to estimate the integral over the entire interval.  
+
+?>**alpha compositing**  
+In computer graphics, *alpha compositing* is the process of combining one image with a background to create the appearance of partial or full transparency. It is often useful to render picture elements (pixels) in separate passes or layers and then combine the resulting 2D images into a single, final image called the *composite*.  
+$I_c = \alpha_f I_f + (1-\alpha_f)I_b$  
+
+![alt text](image-2.png)  
+
+## 5. Optimizing a Neural Radiance Field  
+

@@ -57,3 +57,31 @@ $I_c = \alpha_f I_f + (1-\alpha_f)I_b$
 
 ## 5. Optimizing a Neural Radiance Field  
 
+### 5.1 Positional encoding (different from *Transformer*)  
+
+deep networks are biased towards learning *lower frequency* functions  
+**solution:** mapping the inputs to a *higher dimensional space* using high frequency functions  
+
+>reformulating $F_\theta$ as a compusition of two functions $F_\theta = F_\theta^{\prime} \circ \gamma$ $\Rightarrow$ $\gamma$ is a mapping from $\mathbb{R}$ into a higher dimensional space $\mathbb{R}^{2L}$  
+>$\gamma(p) = (sin(2^0\pi p), cos(2^0 \pi p), ..., sin(2^{L-1}\pi p), cos(2^{L-1}\pi p))$  
+
+### 5.2 hierarchical volume sampling  
+
+**Inefficiency:** *free space* and *occluded regions* are sampled repeatedly  
+
+>***Two networks***: one "coarse" and one "fine"  
+>- sample a set of $N_c$ location using stratified sampling and evaluate the "coarse" network at these locations  
+>- produce a more informed sampling of points along each ray where *samples are biased towards the relevant parts of the volume*  
+
+rewrite the alpha composited color from the coarse network $\hat{C}_c(r)$  
+$\hat{C}_c(r) = \sum_{i = 1}^{N_c}w_i c_i, w_i = T_i(1 - exp(-\sigma_i \delta_i))$  
+
+- Normalizing the weights as $\hat{w_i} = \frac{w_i}{\sum_{j = 1}^{N_c}}w_j$ produces ***a piecewise-constant PDF*** along the ray  
+- sample $N_f$ locations from this distribution using ***inverse transform sampling***  
+- compute the final rendered color using all $N_c + N_f$ samples  
+
+?>**Inversed Transform Sampling**  
+*Inverse transform sampling* is a technique used to generate samples from a given probability distribution. The idea is to transform a uniformly distributed random variable into a variable that follows the target distribution by applying the inverse of the cumulative distribution function (CDF) of that distribution.  
+
+### 5.3 Implementation details  
+

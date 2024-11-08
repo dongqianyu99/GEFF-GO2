@@ -1,7 +1,9 @@
 - [Paper Reading](/papar%20reading/README.md)
   - [fr3m](/papar%20reading/fr3m/README.md)
     - [Distilled Feature Fields Enable Few-Shot Language-Guided Manipulation](/papar%20reading/fr3m/Distilled%20Feature%20Fields%20Enable%20Few-Shot%20Language-Guided%20Manipulation.md)
-    - [Representing Scenes as Neural Radiance Fields for View Synthesis (NeRF)](/papar%20reading/NeRF/Representing%20Scenes%20as%20Neural%20Radiance%20Fields%20for%20View%20Synthesis%20(NeRF).md)
+  - [NeRF](/papar%20reading/NeRF/README.md)
+  - [3D Gaussian](/papar%20reading/3D%20Gaussian/README.md)
+    - [Representing Scenes as Neural Radiance Fields for View Synthesis (NeRF)](/papar%20reading/3D%20Gaussian/3D%20Gaussian%20Splatting%20for%20Real-Time%20Radiance%20Field%20Rendering.md)
   - LERF
   - LEGaussians
   - GraspSplats

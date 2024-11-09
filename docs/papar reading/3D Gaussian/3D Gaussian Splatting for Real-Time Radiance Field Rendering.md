@@ -32,3 +32,23 @@ This means that the rendering algorithm takes into account *which parts of the s
 
 ## Introduction  
 
+- *meshes* and *points* $\Rightarrow$ explicit, good fit for fast GPU/CUDA-based rasterization  
+- NeRF $\Rightarrow$ optimizing a Multi-Layer Perceptron (MLP) using *volumeric* ray-marching  
+- *interpolaing values* is the most efficient radiance field solutions to date build on continuous representations  
+$\Rightarrow$ stochastic sampling is costly and can result in noise  
+
+**tile-base splatting solution**  
+
+**Three main components:**  
+- initialize the set of 3D Gaussions with the **sparse point cloud** produced for free as part of the SfM (Structure-from-Motion) process $\Rightarrow$ only SfM points as input or even *random initialization*  
+
+>**Structure-from-Motion (SfM):**  
+SfM is a computer vision technique aimed at reconstructing the 3D structure of a scene and estimating the positions and orientations of the cameras from a series of 2D images. By analyzing the relative motion between images, SfM can reconstruct the 3D geometry of the scene from multiple viewpoints.  
+The initial reconstruction in SfM is usually **sparse**, meaning it uses a small number of feature points to reconstruct the scene.  
+
+- optimization of the properties of the 3D Gaussians - **3D position, opacity $\alpha$, anisotropic covariance, and spherical harmonic (SH) coefficients** $\Rightarrow$ *compact, unstructured, and precise representation of the scene*    
+- real-time rendering solution (fast GPU sorting algorithms, tile-based rasterization)  
+  - 3D Gaussian representaion $\Rightarrow$ perform **anisotropic splatting** that *respects visibility ordering* (sorting, $\alpha$ blending)  
+  - a fast and accurate *backward pass* by tracking the traversal of as many sorted splats as required  
+
+![alt text](v2-7cbe3b0c3b67ce80593fad0d73a814b5_r.png)

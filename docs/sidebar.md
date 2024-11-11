@@ -10,3 +10,5 @@
   - ConceptGraphs
   - GRUtopia
   - RoboCasa
+- [Notes](/notes/README.md)
+  - [1st Workshop on X-Embodiment Robot Learning, CoRL'24](/notes/1st%20Workshop%20on%20X-Embodiment%20Robot%20Learning,%20CoRL'24/co-notes.md)

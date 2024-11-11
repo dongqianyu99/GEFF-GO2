@@ -1,0 +1,2 @@
+Some quick notes.  
+Start from noting on 1st Workshop on X-Embodiment Robot Learning, CoRL'24 - "Exploring the Boundaries of the X-Embodiment Problem" delivered by Ryan Julian (Google), which is probably the first job I've ever done.  

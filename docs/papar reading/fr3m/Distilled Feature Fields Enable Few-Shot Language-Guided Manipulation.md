@@ -71,15 +71,26 @@ It organizes data using a *multi-level hash grid* structure, allowing for fast l
 **Distilled Feature Fields (DFFs)** are an extension of NeRF that aim to generate richer 3D representations by incorporating features from a vision model. 
 including an additional output to reconstruct *dense 2D features* from a vision model $f_{vis}$
 
-$f: 3D {\space} position {\space} x {\space}\mapsto {\space} a {\space} feature {\space} vector {\space} f(x)$  
+$$
+f: 3D {\space} position {\space} x {\space}\mapsto {\space} a {\space} feature {\space} vector {\space} f(x)
+$$  
 
 each feature vector is given by the feature rendering integral between the near and far plane ($t_n$ and $t_f$):  
 
-$F(r)=\int_{t_n}^{t_f}T(t)\sigma(r_t)f(r_t)dt$ ,with $T(t)=exp(-\int_{t_n}^{t}\sigma(r_s)ds)$  
+$$
+F(r)=\int_{t_n}^{t_f}T(t)\sigma(r_t)f(r_t)dt \text{ ,with } T(t)=exp(-\int_{t_n}^{t}\sigma(r_s)ds)
+$$  
 
 #### Feature Distillation  
-$N$ 2D feature maps $\{I^f_i\}^N_{i=1}$, $I^f=f_{vis}(I)$  
-optimize $f$ by minimizing the quadratic loss $L_{feat}=\sum_{r\in{R}}||\hat{F}(r)-I^f(r)||_2^2$  
+$N$ 2D feature maps 
+$$
+\{I^f_i\}^N_{i=1} \text{ , } I^f=f_{vis}(I)
+$$  
+optimize $f$ by minimizing the quadratic loss 
+
+$$
+L_{feat}=\sum_{r\in{R}}||\hat{F}(r)-I^f(r)||_2^2
+$$  
 
 #### Extracting Dense Visual Features from CLIP  
 **CLIP Modification**
@@ -102,7 +113,9 @@ approximate this local context via *a discrete set of query points* and *the fea
 - adjust its mean and variance manually to cover parts of the objects we intend to targets, as well as important context cues  
 -  For a 6-DOF gripper pose $T$, we sample the feature field $f$ at each point in the query point cloud, transformed by $T$  
 - the occupancy given by the local geometry $\Rightarrow$ *$\alpha$-weighted features*  
- $f_{\alpha}=\alpha(x)\cdot f(x)$, where $\alpha (x)=1-exp(-\sigma(x) \cdot \delta)\in (0, 1)$  
+ $$
+ f_{\alpha}=\alpha(x)\cdot f(x) \text{ , where } \alpha (x)=1-exp(-\sigma(x) \cdot \delta)\in (0, 1)
+ $$  
 
 ?>
 **Density Field $\sigma$:** In a NeRF model, the density field represents *the distribution of objects in space*. A higher density value means the object is more opaque or solid at that point, indicating the object’s occupancy in the voxel.  
@@ -112,7 +125,9 @@ approximate this local context via *a discrete set of query points* and *the fea
 **Feature weighting:** At each point $x$ in the scene, the features extracted from that region are weighted by the corresponding alpha value. This means that *regions with high transparency (i.e., dense objects) will have more influence in the feature representation*, while regions with low transparency (mostly empty space) will have less influence.  
 
 sample a set of feature:  
-$\{f_{\alpha}(x)|x\in T\mathcal{X}\}$  
+$$
+\{f_{\alpha}(x)|x\in T\mathcal{X}\}
+$$  
 and concatenate along the feature-dimension into a vector, $z_T\in \mathbb{R}^{N_q\cdot|f|}$  
 $\Rightarrow$ query points $\mathcal{X}$ and demo embedding $z_T$ jointly encode the demo pose $T$  
 
@@ -145,7 +160,9 @@ average $z_T$ over the demos for the same task $\Rightarrow$ *task embedding* $Z
 #### Pose Optimization  
 
 initial poses optimization:  
-$\mathcal{J}_{pose}(T)=-cos(z_T, Z_M)$  
+$$
+\mathcal{J}_{pose}(T)=-cos(z_T, Z_M)
+$$  
 
 - optimize the initial poses using the *Adam* optimizer to search for poses that have the highest similarity to the task embedding $Z_M$  
 
@@ -182,7 +199,9 @@ finding the demonstrations that maximizes the cosine similarity $cos(q, F_d)$
 
 #### Language-Guided Grasp Pose Optimization  
 
-$\mathcal{J}_{lang}(T)=\mathop{mean}\limits_{x\in T\mathcal{X}}[q \otimes f_{\alpha}(x)]\cdot\mathcal{J}_{pose}(T)$  
+$$
+\mathcal{J}_{lang}(T)=\mathop{mean}\limits_{x\in T\mathcal{X}}[q \otimes f_{\alpha}(x)]\cdot\mathcal{J}_{pose}(T)
+$$  
 - language-guidance weight $C_q=\mathop{mean}\limits_{x\in T\mathcal{X}}[q \otimes f_{\alpha}(x)]$ is the normalized cosine similarity between the text embedding $q$ and the average $\alpha$-weighted query feature for a pose $T$  
 - interatively update the pose $T$ via *gradient descent* while pruning  
 

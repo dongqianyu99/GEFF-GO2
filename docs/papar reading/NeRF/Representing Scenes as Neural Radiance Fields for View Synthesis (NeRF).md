@@ -35,15 +35,24 @@ $\mathcal{c}$ as a function of both $\mathcal{x}$ and $\mathcal{d}$ $\Rightarrow
 ## 4. Volume Rendering with Radiance Fields  
 
 >for camera ray $\mathcal{r}(t)=\mathcal{o}+t\mathcal{d}$, the expected color $C(\mathcal{r})$ with near and far bounds $t_n$ and $t_f$ is:  
-><mark>$C(\mathcal{r}) = \int_{t_n}^{t_f}T(t)\sigma(\mathcal{r}(t))\mathcal{c}(\mathcal{r}(t), \mathcal{d})dt$</mark>  
+><mark>
+>$$
+>C(\mathcal{r}) = \int_{t_n}^{t_f}T(t)\sigma(\mathcal{r}(t))\mathcal{c}(\mathcal{r}(t), \mathcal{d})dt
+>$$
+></mark>  
 
 - $T(t)$: the light transmittance from $t_n$ to $t$ $\Rightarrow$ $T(t) = exp(-\int_{t_n}^t \sigma(\mathcal{r}(s))ds)$  
 
 estimate using **Deterministic quadrature**  
 using a stratified sampling approach $\Rightarrow$ partition $[t_n, t_f]$ into $N$ evenly-spaced bins:  
-$t_i \sim \mathcal{U}[t_n + \frac{i-1}{N}(t_f - t_n), t_n + \frac{i}{N}(t_f - t_n)]$  
+$$
+t_i \sim \mathcal{U}[t_n + \frac{i-1}{N}(t_f - t_n), t_n + \frac{i}{N}(t_f - t_n)]
+$$  
 
-$\Rightarrow$ $\hat{C}(r) = \sum_{i = 1}^N T_i(1 - exp(-\sigma_i\delta_i))c_i$, where $T_i = exp(-\sum_{j = 1}^{i - 1}\sigma_j\delta_j)$  
+$\Rightarrow$ 
+$$
+\hat{C}(r) = \sum_{i = 1}^N T_i(1 - exp(-\sigma_i\delta_i))c_i \text{ , where } T_i = exp(-\sum_{j = 1}^{i - 1}\sigma_j\delta_j)
+$$  
 - $\delta_i = t_{i+1} - t_i$ is the distance between adjacent samples  
 
 ?>**Deterministic quadrature**  
@@ -63,7 +72,9 @@ deep networks are biased towards learning *lower frequency* functions
 **solution:** mapping the inputs to a *higher dimensional space* using high frequency functions  
 
 >reformulating $F_\theta$ as a compusition of two functions $F_\theta = F_\theta^{\prime} \circ \gamma$ $\Rightarrow$ $\gamma$ is a mapping from $\mathbb{R}$ into a higher dimensional space $\mathbb{R}^{2L}$  
->$\gamma(p) = (sin(2^0\pi p), cos(2^0 \pi p), ..., sin(2^{L-1}\pi p), cos(2^{L-1}\pi p))$  
+>$$
+>\gamma(p) = (sin(2^0\pi p), cos(2^0 \pi p), ..., sin(2^{L-1}\pi p), cos(2^{L-1}\pi p))
+>$$  
 
 ### 5.2 hierarchical volume sampling  
 
@@ -74,7 +85,9 @@ deep networks are biased towards learning *lower frequency* functions
 >- produce a more informed sampling of points along each ray where *samples are biased towards the relevant parts of the volume*  
 
 rewrite the alpha composited color from the coarse network $\hat{C}_c(r)$  
-$\hat{C}_c(r) = \sum_{i = 1}^{N_c}w_i c_i, w_i = T_i(1 - exp(-\sigma_i \delta_i))$  
+$$
+\hat{C}_c(r) = \sum_{i = 1}^{N_c}w_i c_i, w_i = T_i(1 - exp(-\sigma_i \delta_i))
+$$  
 
 - Normalizing the weights as $\hat{w_i} = \frac{w_i}{\sum_{j = 1}^{N_c}}w_j$ produces ***a piecewise-constant PDF*** along the ray  
 - sample $N_f$ locations from this distribution using ***inverse transform sampling***  

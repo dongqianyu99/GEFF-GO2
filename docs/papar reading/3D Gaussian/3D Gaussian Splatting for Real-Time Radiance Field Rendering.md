@@ -30,7 +30,7 @@ This means that the rendering algorithm takes into account *which parts of the s
 >**Anisotropic Splatting:**  
 **Splatting** is a rendering technique often used to spread image or geometric information *from discrete sample points to a continuous space*. Anisotropic splatting refers to the process where the influence of sample points is spread differently in different directions, meaning **the rendering effect adjusts based on the orientation** (or other geometric information) of the sample points. This method is more flexible than traditional isotropic splatting and can better capture directional geometric features in a scene.  
 
-## Introduction  
+## INTRODUCTION  
 
 - *meshes* and *points* $\Rightarrow$ explicit, good fit for fast GPU/CUDA-based rasterization  
 - NeRF $\Rightarrow$ optimizing a Multi-Layer Perceptron (MLP) using *volumeric* ray-marching  
@@ -51,4 +51,36 @@ The initial reconstruction in SfM is usually **sparse**, meaning it uses a small
   - 3D Gaussian representaion $\Rightarrow$ perform **anisotropic splatting** that *respects visibility ordering* (sorting, $\alpha$ blending)  
   - a fast and accurate *backward pass* by tracking the traversal of as many sorted splats as required  
 
-![alt text](v2-7cbe3b0c3b67ce80593fad0d73a814b5_r.png)
+![alt text](v2-7cbe3b0c3b67ce80593fad0d73a814b5_r.png)  
+
+## RELATED WORK  
+
+### Traditional Scene Reconstruction and Rendering  
+- based on light Fields  
+- Structure-from-Motion (SfM)  
+- multi-view stero (MVS)  
+- neural rendering algorithm  
+
+### Neural Rendering and Radiance Fields  
+- NeRF $\Rightarrow$ Mip-NeRF360  
+
+### Point-Based Rendering and Radiance Fields  
+- Point-based methods render disconnected and unstructured geometry samples $\Rightarrow$ **splatting** point primitives with an extent larger than a pixel, e.g., *circular or elliptic discs, ellipsoids, or surfels*  
+- *differentiable* point-based rendering techniques $\Rightarrow$ Points be augmented with neural features and rendered using a CNN  
+- **Point-based** *$\alpha$-blending* and *NeRF-style* volumetric rendering $\Rightarrow$ color C is given by volumetric rendering alog a ray  
+>the rendering algorithm is very different: **NeRF** vs **Point-based**  
+
+*NeRF:*  
+- continuous representation implicitly representing empty/occupied space  
+- expensive random sampling with noise and computational expense  
+
+*Point-based:*
+- unstructured, discrete representation  
+- allow creation, destruction, and displacement of geometry $\Leftarrow$ optimizing opacity and positions  
+- avoiding the shortcomings of a full volumetric representaion  
+
+- *fast sphere rasterization* $\Rightarrow$ **tile-based and sorting renderer**  
+- "Our rasterization respects **visibility order**"  
+- "We back-propagate gradients on all splats in a pixel and rasterize anisotropic splats"
+
+## Overview  

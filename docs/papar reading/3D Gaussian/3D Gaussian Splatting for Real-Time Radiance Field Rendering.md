@@ -2,6 +2,8 @@
 
 >key words: **high-quality**, **real-time**, **novel-view**, **unbounded and complete scenes**  
 
+[b站人话讲解](https://www.bilibili.com/video/BV1zi421v7Dr/?spm_id_from=333.337.search-card.all.click&vd_source=14ad5ada89d0491ad8ab06103ead6ad6)
+
 ***Tree Key Elements:***  
 - starting from *sparse points produced during camera calibration*, we represent the scene with **3D Gaussians** that preserve desirable properties of *continuous volumetric radiance fields* for scene optimization while avoiding unnecessary computation in empty space  
 
@@ -14,7 +16,7 @@ A mathematical model used to represent *uncertainty or distribution* of points o
 >**Continuous Volumetric Radiance Fields:**  
 This refers to the **volume density** and **radiance** at every point in the scene, which can be estimated through volume rendering techniques. The use of 3D Gaussians enables the scene to *maintain these continuous radiance properties* while allowing for scene optimization.
 
-- perform **interleaved optimization/density contrl of the 3D Gaussians**, notably optimizing **anisotropic convariance** to achieve an accurate representation of the scene  
+- perform **interleaved optimization/density control of the 3D Gaussians**, notably optimizing **anisotropic convariance** to achieve an accurate representation of the scene  
 
 >**Interleaved Optimization/Density Control:**  
 This refers to the alternating optimization of different parameters. In this context, it involves optimizing both the density (i.e., the weight and spread of each 3D Gaussian distribution) and the associated covariance structure.  
@@ -30,7 +32,7 @@ This means that the rendering algorithm takes into account *which parts of the s
 >**Anisotropic Splatting:**  
 **Splatting** is a rendering technique often used to spread image or geometric information *from discrete sample points to a continuous space*. Anisotropic splatting refers to the process where the influence of sample points is spread differently in different directions, meaning **the rendering effect adjusts based on the orientation** (or other geometric information) of the sample points. This method is more flexible than traditional isotropic splatting and can better capture directional geometric features in a scene.  
 
-## INTRODUCTION  
+## 1. INTRODUCTION  
 
 - *meshes* and *points* $\Rightarrow$ explicit, good fit for fast GPU/CUDA-based rasterization  
 - NeRF $\Rightarrow$ optimizing a Multi-Layer Perceptron (MLP) using *volumeric* ray-marching  
@@ -48,12 +50,12 @@ The initial reconstruction in SfM is usually **sparse**, meaning it uses a small
 
 - optimization of the properties of the 3D Gaussians - **3D position, opacity $\alpha$, anisotropic covariance, and spherical harmonic (SH) coefficients** $\Rightarrow$ *compact, unstructured, and precise representation of the scene*    
 - real-time rendering solution (fast GPU sorting algorithms, tile-based rasterization)  
-  - 3D Gaussian representaion $\Rightarrow$ perform **anisotropic splatting** that *respects visibility ordering* (sorting, $\alpha$ blending)  
+  - 3D Gaussian representation $\Rightarrow$ perform **anisotropic splatting** that *respects visibility ordering* (sorting, $\alpha$ blending)  
   - a fast and accurate *backward pass* by tracking the traversal of as many sorted splats as required  
 
 ![alt text](v2-7cbe3b0c3b67ce80593fad0d73a814b5_r.png)  
 
-## RELATED WORK  
+## 2. RELATED WORK  
 
 ### Traditional Scene Reconstruction and Rendering  
 - based on light Fields  
@@ -83,4 +85,12 @@ The initial reconstruction in SfM is usually **sparse**, meaning it uses a small
 - "Our rasterization respects **visibility order**"  
 - "We back-propagate gradients on all splats in a pixel and rasterize anisotropic splats"
 
-## Overview  
+## 3. OVERVIEW  
+
+a set of images of a static scene + corresponding cameras calibrated by SfM $\Rightarrow$ sparse point cloud $\Rightarrow$ 3D Gaussians (**position**, **covariance matrix**, **opacity $\alpha$**)   
+$\Rightarrow$ compact representation of the 3D scene (by **highly anisotropic volumetric splats**) + color of the radiance field (by **spherical harmonics, SH**)  
+
+Why 3D Gaussian is fast?  **tile-based rasterizer** $\Rightarrow$ *$\alpha$ blending of anisotropic splats*, *respecting visibility order*, *fast backward pass*  
+
+## 4. DIFFERENTIABLE 3D GAUSSIAN SPLATTING  
+

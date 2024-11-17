@@ -90,7 +90,59 @@ The initial reconstruction in SfM is usually **sparse**, meaning it uses a small
 a set of images of a static scene + corresponding cameras calibrated by SfM $\Rightarrow$ sparse point cloud $\Rightarrow$ 3D Gaussians (**position**, **covariance matrix**, **opacity $\alpha$**)   
 $\Rightarrow$ compact representation of the 3D scene (by **highly anisotropic volumetric splats**) + color of the radiance field (by **spherical harmonics, SH**)  
 
-Why 3D Gaussian is fast?  **tile-based rasterizer** $\Rightarrow$ *$\alpha$ blending of anisotropic splats*, *respecting visibility order*, *fast backward pass*  
+Why 3D Gaussian is fast?  
+**tile-based rasterizer** $\Rightarrow$ *$\alpha$ blending of anisotropic splats*, *respecting visibility order*, *fast backward pass*  
 
 ## 4. DIFFERENTIABLE 3D GAUSSIAN SPLATTING  
+
+### Modeling
+model the geometry as a set of ***3D Gaussians*** $\Rightarrow$ **do not require normals**:  
+
+- 3D covariance matrix $\Sigma$  
+- in world space centered at point (mean) $\mu$  
+$$
+G(x)=e^{-\frac{1}{2}(x)^T \Sigma ^{-1} (x)}
+$$  
+
+### Projection  
+3D Gaussians to 2D for rendering  
+</br>
+Given viewing transformation $W$, the covariance matrix $\Sigma^{\prime}$ in camera coordinate:  
+$$
+\Sigma^{\prime} = JW \Sigma W^T J^T
+$$
+- $J$ is the *Jacobian* of the affine approximation of the projective transformation  
+
+### Optimization  
+!>directly optimize the covariance matrix $\Sigma$ $\Rightarrow$ covariance matrices have *physical meaning* only when they are opsitive **semi-definite** $\Rightarrow$ gradient descent cannot be easily constrained, matrices might be invalid  
+
+$\Sigma$ is analogous to describing the configuration of an **ellipsoid**  
+
+Given a **scaling matrix $S$** and **rotation matrix $R$**:  
+$$
+\Sigma = RSS^T R^T
+$$  
+
+for *independent optimization*, store them separatly: 3D vector $s$ for scaling, quaternion $q$ for rotation  
+- derive the gradient for all parameters explicitly  
+
+## 5. OPTIMIZATION WITH ADAPTIVE DENSITY CONTROL OF 3D GAUSSIAN  
+
+optimization is the core  
+
+optimize position $p$, $\alpha$, covariance $\Sigma$, **SH coefficients representing color $c$ of each Gaussian** (interleaved with steps that control the *density*)  
+
+### 5.1 Optimization  
+
+incorrectly positioned due to 3D to 2D $\Rightarrow$ *destroy* or *move* geonetry  
+
+**quality** of the parameters of the covariances of the 3D Gaussians is critical $\Rightarrow$ *large homogeneous areas* can be captured with a samll number of large anisotropic Gaussians   
+
+
+
+
+
+
+
+
 

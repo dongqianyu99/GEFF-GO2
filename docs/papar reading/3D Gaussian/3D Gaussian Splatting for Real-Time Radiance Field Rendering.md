@@ -138,6 +138,8 @@ incorrectly positioned due to 3D to 2D $\Rightarrow$ *destroy* or *move* geonetr
 
 **quality** of the parameters of the covariances of the 3D Gaussians is critical $\Rightarrow$ *large homogeneous areas* can be captured with a samll number of large anisotropic Gaussians   
 
+estimate the initial covariance matrix as an isotropic Gaussian  
+
 
 
 

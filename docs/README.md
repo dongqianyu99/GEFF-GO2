@@ -1,4 +1,4 @@
-# GEFF-GO2
+# X-Embodiment
 
 > An awesome project.
 

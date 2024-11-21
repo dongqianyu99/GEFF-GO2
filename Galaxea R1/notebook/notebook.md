@@ -8,6 +8,10 @@ ZSC solved the problem, concerning Linux core and NVIDIA drivers impropriate ins
 installed: Isaac sim, cache, nucleus navigator, local Nucleus Service  
 
 ## Basic Operations  
+### Standalone Python  
+Isaac sim has a Python environment inside: ~/.local/share/ov/pkg/isaac-sim-4.0.0/python.sh  
+`./python.sh` there're verious Python APIs 
+
 [isaac sim具身智能仿真系列](https://www.bilibili.com/video/BV1TZ421g7xy?spm_id_from=333.788.videopod.sections&vd_source=14ad5ada89d0491ad8ab06103ead6ad6)  
 
 First 10 classes are concerning basic operations in Isaac sim  
@@ -114,3 +118,4 @@ def print_cube_info(self, step_size):
     print("Cube's linear velocity is :" + str(linear_velocity))
 ~~~
 
+## 

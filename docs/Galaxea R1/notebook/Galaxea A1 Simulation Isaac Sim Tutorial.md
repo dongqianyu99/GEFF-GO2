@@ -253,3 +253,96 @@ def _setup_scene(self):
 
         print("Scene is set up.")
 ~~~
+
+#### pre-physics step calls
+~~~py
+    # pre-physics step calls
+    def _pre_physics_step(self, actions: torch.Tensor):
+        self._process_action(actions)
+
+    def _apply_action(self):
+        # set left/right arm/gripper joint position targets
+        self._robot.set_joint_position_target(
+            self.left_arm_joint_pos_target, self.left_arm_joint_ids
+        )
+        self._robot.set_joint_position_target(
+            self.left_gripper_joint_pos_target, self.left_gripper_joint_ids
+        )
+        self._robot.set_joint_position_target(
+            self.right_arm_joint_pos_target, self.right_arm_joint_ids
+        )
+        self._robot.set_joint_position_target(
+            self.right_gripper_joint_pos_target, self.right_gripper_joint_ids
+        )
+~~~
+
+Before each physics step, `_pre_physics_step` processes the input actions to make them suitable for the current environmnet. `_apply_action` applies the processed actions to the robots.  
+
+#### post-physics step calls **(key part)**
+**observation:** 
+
+~~~py
+    # post-physics step calls
+    def _get_observations(self) -> dict:
+        # note: the position in observations should in the local frame
+
+        # get robot end-effector (EE) pose
+        left_ee_pos = (  # convert the position from the world position to the local cordinate system
+            self._left_ee_frame.data.target_pos_w[..., 0, :] - self.scene.env_origins
+        )
+        right_ee_pos = (
+            self._right_ee_frame.data.target_pos_w[..., 0, :] - self.scene.env_origins
+        )
+        left_ee_pose = torch.cat(
+            [left_ee_pos, self._left_ee_frame.data.target_quat_w[..., 0, :]], dim=-1
+        )
+        right_ee_pose = torch.cat(
+            [right_ee_pos, self._right_ee_frame.data.target_quat_w[..., 0, :]], dim=-1
+        )
+
+        joint_pos, joint_vel = self._process_joint_value()
+
+        # get object pose
+        object_pos = self._object[self.object_id].data.root_pos_w - self.scene.env_origins
+        object_pose = torch.cat([object_pos, self._object[self.object_id].data.root_quat_w], dim=-1)
+
+        obs = {
+            # robot joint position: dim=(6+2)*2
+            "joint_pos": joint_pos,
+            "joint_vel": joint_vel,
+            # robot ee pose: dim=7*2
+            "left_ee_pose": left_ee_pose,
+            "right_ee_pose": right_ee_pose,
+            # object pose: dim=7
+            "object_pose": object_pose,
+            # goal pose: dim=7
+            "goal_pose": torch.cat([self.goal_pos, self.goal_rot], dim=-1),
+            "last_joints": joint_pos,
+        }
+        if self.cfg.enable_camera:
+            # image observations: N*(H*W*C)
+            obs["front_rgb"] = self._front_camera.data.output["rgb"].clone()[..., :3]
+            obs["front_depth"] = (
+                self._front_camera.data.output["distance_to_image_plane"]
+                .clone()
+                .unsqueeze(-1)
+            )
+            obs["left_rgb"] = self._left_wrist_camera.data.output["rgb"].clone()[
+                ..., :3
+            ]
+            obs["left_depth"] = (
+                self._left_wrist_camera.data.output["distance_to_image_plane"]
+                .clone()
+                .unsqueeze(-1)
+            )
+            obs["right_rgb"] = self._right_wrist_camera.data.output["rgb"].clone()[
+                ..., :3
+            ]
+            obs["right_depth"] = (
+                self._right_wrist_camera.data.output["distance_to_image_plane"]
+                .clone()
+                .unsqueeze(-1)
+            )
+
+        return {"policy": obs}
+~~~

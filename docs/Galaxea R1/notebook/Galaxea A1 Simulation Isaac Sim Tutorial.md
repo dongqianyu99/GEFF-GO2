@@ -393,6 +393,7 @@ Before each physics step, `_pre_physics_step` processes the input actions to mak
 ~~~  
 
 ~~~py
+    # reset
     def _reset_idx(self, env_ids: torch.Tensor | None):
 ~~~
 

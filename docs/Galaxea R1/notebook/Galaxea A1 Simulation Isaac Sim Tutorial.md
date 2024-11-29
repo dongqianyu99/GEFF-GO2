@@ -278,8 +278,8 @@ def _setup_scene(self):
 
 Before each physics step, `_pre_physics_step` processes the input actions to make them suitable for the current environmnet. `_apply_action` applies the processed actions to the robots.  
 
-#### post-physics step calls **(key part)**
-**observation:** 
+#### post-physics step calls  
+**observation (key part):** 
 
 ~~~py
     # post-physics step calls
@@ -346,3 +346,54 @@ Before each physics step, `_pre_physics_step` processes the input actions to mak
 
         return {"policy": obs}
 ~~~
+
+**process andd organize joint position and velocity data:**
+~~~py
+    def _process_joint_value(self):
+        joint_pos = self._robot.data.joint_pos.clone()
+        ...
+
+        joint_vel = self._robot.data.joint_vel.clone()
+        l_arm_joint_vel = joint_vel[:, self.left_arm_joint_ids]
+        r_arm_joint_vel = joint_vel[:, self.right_arm_joint_ids]
+        l_gripper_joint_vel = joint_vel[:, self.left_gripper_joint_ids]
+        r_gripper_joint_vel = joint_vel[:, self.right_gripper_joint_ids]
+        # normalize gripper joint velocity
+        l_gripper_joint_vel = l_gripper_joint_vel[:, 0] / (
+            self.gripper_open - self.gripper_close
+        )
+        r_gripper_joint_vel = r_gripper_joint_vel[:, 0] / (
+            self.gripper_open - self.gripper_close
+        )
+
+        joint_vel = torch.cat(
+            [
+                l_arm_joint_vel,
+                l_gripper_joint_vel.view(-1, 1),
+                r_arm_joint_vel,
+                r_gripper_joint_vel.view(-1, 1),
+            ],
+            dim=-1,
+        )
+        return joint_pos, joint_vel
+~~~
+
+~~~py
+    def _get_dones(self) -> tuple[torch.Tensor, torch.Tensor]:
+        ...
+    def _get_right_ee_pose(self):  # only used right arm (?)
+        ...
+~~~
+
+**get rewards (key point):**
+~~~py
+    def _get_rewards(self) -> torch.Tensor:
+        reward = self._compute_reward()
+        return reward
+~~~  
+
+~~~py
+    def _reset_idx(self, env_ids: torch.Tensor | None):
+~~~
+
+#### auxiliary methods

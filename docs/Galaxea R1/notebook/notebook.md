@@ -1,4 +1,4 @@
-# Galaxea R1  
+# Isaac Sim  
 
 ## Install Isaac Lab
 Always error: **Failed to connect any GPU devices, including an attempt with compatibility mode.**  

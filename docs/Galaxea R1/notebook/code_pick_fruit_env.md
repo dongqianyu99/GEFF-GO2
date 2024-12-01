@@ -21,7 +21,7 @@ class R1MultiFruitEnv(DirectRLEnv):  # "DirectRLEnv" is a custom reinforcement l
     )
 ~~~
 
-## __init__
+## \_\_init\_\_
 ~~~py
 def __init__(
         self,

@@ -16,5 +16,5 @@ After installation, the robot works well (~stupidly~)
 
 ## Code Reading  
 [Minimal Excutable Code Unit](/Galaxea%20R1/notebook/code_Minimal_Excutable_Code_Unit.md)  
-[__init__](/Galaxea%20R1/notebook/code_init.md)  
+[\_\_init\_\_](/Galaxea%20R1/notebook/code_init.md)  
 [pick fruit env](/Galaxea%20R1/notebook/code_pick_fruit_env.md)

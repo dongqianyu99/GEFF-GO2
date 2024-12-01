@@ -1,6 +1,6 @@
 # Minimal Excutable Code Unit  
 Path: /source/standalone/galaxea/basic/simple_env.py
-~~~py
+```python
 """Script to run an environment with zero action agent."""
 
 """Launch Isaac Sim Simulator first."""
@@ -65,4 +65,4 @@ if __name__ == "__main__":
     main()
     # close sim app
     simulation_app.close()
-~~~
+```

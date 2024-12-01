@@ -398,3 +398,48 @@ Before each physics step, `_pre_physics_step` processes the input actions to mak
 ~~~
 
 #### auxiliary methods
+**process the action:**
+~~~py
+    # auxiliary methods
+    def _process_action(self, actions: torch.Tensor):
+        # left_arm: 6 joints
+        # left_gripper: 2 joint
+        # right_arm: 6 joints
+        # right_gripper: 2 joints
+        # gripper_state: open: 1, close: -1
+        self.actions = actions.clone()
+
+        if self.action_type == "joint_position":
+            self.left_arm_joint_pos_target = self.actions[:, :6]
+            self.right_arm_joint_pos_target = self.actions[:, 7:13]
+
+            l_gripper_action = self.actions[:, 6].view(-1, 1)
+            r_gripper_action = self.actions[:, 13].view(-1, 1)
+            self._translate_gripper_state_to_joints(l_gripper_action, r_gripper_action)
+
+        elif self.action_type == "ik_abs" or self.action_type == "ik_rel":
+            if self.action_type == "ik_abs":
+                ...
+            elif self.action_type == "ik_rel":
+                ...
+
+            # mapping gripper state (1/-1, or True/False) to joint position
+            self._translate_gripper_state_to_joints(l_gripper_action, r_gripper_action)
+
+            # compute arm joint position using differential IK
+            self._compute_arm_joints(l_arm_actions, r_arm_actions)
+
+            # clamp the joint position targets
+        else:
+            raise ValueError(f"Unknown action type '{self.action_type}'")
+~~~
+
+**check:**
+~~~py
+    def _object_reached_goal(self):
+        ...
+
+    def _within_basket(self, obj_pos, basket_pos):
+        ...
+~~~
+

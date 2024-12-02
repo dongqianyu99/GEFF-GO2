@@ -136,10 +136,21 @@ optimize position $p$, $\alpha$, covariance $\Sigma$, **SH coefficients represen
 
 incorrectly positioned due to 3D to 2D $\Rightarrow$ *destroy* or *move* geonetry  
 
-**quality** of the parameters of the covariances of the 3D Gaussians is critical $\Rightarrow$ *large homogeneous areas* can be captured with a samll number of large anisotropic Gaussians   
+**quality** of the parameters of the covariances of the 3D Gaussians is critical $\Rightarrow$ *large homogeneous areas* can be captured with a samll number of large anisotropic Gaussians     
 
-estimate the initial covariance matrix as an isotropic Gaussian  
+**Stochastic Gradient Descent** + *fast rasterization* $\Rightarrow$ WHY SO FAST
 
+$\alpha \Rightarrow$ **sigmoid activation function** $\Rightarrow [0, 1)$ range and obtain smooth gradients  
+the scale of the covariance $\Rightarrow$ **exponential activation function**  
+
+- estimate the initial covariance matrix as an *isotropic Gaussian*  
+- axes equal to the mean of the distance to the closest three points  
+- **standard exponential decay scheduling technique**, with loss function:  
+$$
+\mathcal{L} = (1-\lambda)\mathcal{L}_1 + \lambda \mathcal{L}_{D-SSIM}
+$$
+
+### 5.2 Adaptive Control of Gaussians  
 
 
 

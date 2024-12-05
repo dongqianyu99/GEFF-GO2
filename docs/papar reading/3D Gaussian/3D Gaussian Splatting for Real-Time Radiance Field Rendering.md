@@ -126,6 +126,8 @@ $$
 for *independent optimization*, store them separatly: 3D vector $s$ for scaling, quaternion $q$ for rotation  
 - derive the gradient for all parameters explicitly  
 
+![alt text](<Screenshot from 2024-12-05 14-29-50.png>)
+
 ## 5. OPTIMIZATION WITH ADAPTIVE DENSITY CONTROL OF 3D GAUSSIAN  
 
 optimization is the core  
@@ -152,10 +154,21 @@ $$
 
 ### 5.2 Adaptive Control of Gaussians  
 
+***target:*** an intial sparse points from SfM to a denser set  
 
+- optimization **warm up**  
+- **densify** every 100 interations and removes any Gaussians that are trasnparts ($\alpha \lt \epsilon_\alpha$) 
+- populate empty areas, *under-reconstruction* & *over-reconstrcution* $\Rightarrow$ ***large* view-space positional gradients**  
+  - densify Gaussians with an average magnitude of view-space position gradients above a threshold $\tau_{pos}$
 
+details:  
+- small Gaussians in **under-reconstruction** regions (new geometry): **creating a copy**, **moving it in the direction of the positional gradient**  
+- large Gaussians with **high variance**: split into two smaller Gaussians $\Rightarrow$ divide scale by $\phi=1.6$, initialize them by *using original 3D Gaussian as a PDF (probability density function) for sampling*  
 
+![alt text](<Screenshot from 2024-12-05 15-41-49.png>)
 
+***problem:*** get stuck with floaters close to the input cameras $\Rightarrow$ *unjustified increase* in the Gaussian density $\Rightarrow$ need to *moderate the increase* in the number of Gaussians  
+- set the $\alpha$ value close to zero every $N = 3000$ interations  
+- periodically remove Gaussians that are **very large in worldspace** and those that have a **big foot print** in viewspace  
 
-
-
+## 6. FAST DIFFERENTIABLE RASTERIZER FOR GAUSSIANS

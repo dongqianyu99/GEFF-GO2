@@ -3,6 +3,7 @@
 >key words: **high-quality**, **real-time**, **novel-view**, **unbounded and complete scenes**  
 
 [b站人话讲解](https://www.bilibili.com/video/BV1zi421v7Dr/?spm_id_from=333.337.search-card.all.click&vd_source=14ad5ada89d0491ad8ab06103ead6ad6)
+[b站论文讲解](https://www.bilibili.com/video/BV1uV4y1Y7cA/?spm_id_from=333.1391.0.0&vd_source=14ad5ada89d0491ad8ab06103ead6ad6)
 
 ***Tree Key Elements:***  
 - starting from *sparse points produced during camera calibration*, we represent the scene with **3D Gaussians** that preserve desirable properties of *continuous volumetric radiance fields* for scene optimization while avoiding unnecessary computation in empty space  

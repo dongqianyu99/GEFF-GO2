@@ -173,3 +173,23 @@ details:
 - periodically remove Gaussians that are **very large in worldspace** and those that have a **big foot print** in viewspace  
 
 ## 6. FAST DIFFERENTIABLE RASTERIZER FOR GAUSSIANS
+***target:*** fast overall rendering & fast sorting $\Rightarrow$ *approximate* $\aleph$-blending, efficient backpropagating, fully differentiable  
+
+- splitting the screen into **16$\times$16 tiles**, and then proceeds to **cull 3D Gaussians** with a 99% confidence interval intersecting the *view frustum*  
+  - keep Gaussians with a 99% confidence interval intersecting the view fruntum  
+  - guard band to trivially reject Gaussians at *extreme positions*  
+- *instantiate* each Gaussian (number of tiles they overlap, assign each instance a key)  
+- *sort Gaussians* based on these keys $\Leftarrow$ GPU Radix sort  
+  - no additional per-pixel ordering of points
+  - blending is performed based on this initial sorting  
+- produce a list for each tile by identifying the first and last depth-sorted entry $\Rightarrow$ **splats in order, in  parallelism**  
+
+*can't really understand:*
+- When we reach a target saturation of $\aleph$ in a pixel, the corresponding thread stops $\Rightarrow$ **the saturation of $\alpha$ is the only stopping criterion**  
+- During the backward pass, we must therefore *recover the full sequence of blended points per-pixel* in the forward pass  
+
+
+
+
+
+

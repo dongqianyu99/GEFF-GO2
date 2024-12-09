@@ -173,7 +173,7 @@ details:
 - periodically remove Gaussians that are **very large in worldspace** and those that have a **big foot print** in viewspace  
 
 ## 6. FAST DIFFERENTIABLE RASTERIZER FOR GAUSSIANS
-***target:*** fast overall rendering & fast sorting $\Rightarrow$ *approximate* $\aleph$-blending, efficient backpropagating, fully differentiable  
+***target:*** fast overall rendering & fast sorting $\Rightarrow$ *approximate* $\alpha$-blending, efficient backpropagating, fully differentiable  
 
 - splitting the screen into **16$\times$16 tiles**, and then proceeds to **cull 3D Gaussians** with a 99% confidence interval intersecting the *view frustum*  
   - keep Gaussians with a 99% confidence interval intersecting the view fruntum  

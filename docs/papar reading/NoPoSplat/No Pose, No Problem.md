@@ -1,0 +1,1 @@
+# No Pose, No Problem -- Surprisingly Simple 3D Gaussian Splats from Sparse Unposed Images

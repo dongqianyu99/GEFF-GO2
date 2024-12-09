@@ -4,7 +4,9 @@
   - [NeRF](/papar%20reading/NeRF/README.md)
     - [Representing Scenes as Neural Radiance Fields for View Synthesis (NeRF)](/papar%20reading/NeRF/Representing%20Scenes%20as%20Neural%20Radiance%20Fields%20for%20View%20Synthesis%20(NeRF).md)
   - [3D Gaussian](/papar%20reading/3D%20Gaussian/README.md)
-    - [Representing Scenes as Neural Radiance Fields for View Synthesis (NeRF)](/papar%20reading/3D%20Gaussian/3D%20Gaussian%20Splatting%20for%20Real-Time%20Radiance%20Field%20Rendering.md)
+    - [3D Gaussian Splatting for Real-Time Radiance Field Rendering](/papar%20reading/3D%20Gaussian/3D%20Gaussian%20Splatting%20for%20Real-Time%20Radiance%20Field%20Rendering.md)
+  - [NoPoSplat](/papar%20reading/NoPoSplat/README.md)
+    - [No Pose, No Problem -- Surprisingly Simple 3D Gaussian Splats from Sparse Unposed Images](/papar%20reading/NoPoSplat/No%20Pose,%20No%20Problem.md)
   - LERF
   - LEGaussians
   - GraspSplats
